@@ -5,6 +5,7 @@ import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 const BubblePage = () => {
   const [colorList, setColorList] = useState([]);
+  const [bool, setBool] =useState(false)
   // fetch your colors data from the server when the component mounts
     useEffect(()=>{
     axiosWithAuth()
@@ -15,12 +16,12 @@ const BubblePage = () => {
       setColorList(res.data)
     })
     .catch(err=>console.log(err))
-  }, [])
+  }, [bool])
   
 
   return (
     <>
-      <ColorList colors={colorList} updateColors={setColorList} />
+      <ColorList colors={colorList} updateColors={setColorList} setBool= {setBool} bool= {bool} />
       <Bubbles colors={colorList} />
     </>
   );

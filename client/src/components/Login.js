@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {axiosWithAuth} from '../utils/axiosWithAuth';
 import {useHistory} from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
      
   // set the state for credentials
    const [creds, setCreds] = useState({
@@ -10,7 +10,7 @@ const Login = () => {
      password: ""
    })
 
-   let {history} = useHistory()
+   let history = useHistory()
 
    // create the handleChanges
    const handleChanges = (e) =>{
@@ -26,7 +26,7 @@ const Login = () => {
     console.log("I am response from login", res)
     window.localStorage.setItem("token", res.data.payload)
     // when you have handled the token, navigate to the BubblePage route
-     history.push('/protected')
+     props.history.push('/protected')
   })
    .catch(err=>console.log(err))
  }
