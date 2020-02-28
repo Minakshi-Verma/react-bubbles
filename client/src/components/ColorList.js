@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {axiosWithAuth} from "../utils/axiosWithAuth";
-import {useParams} from 'react-router-dom';
+import {useParams, useHistory} from 'react-router-dom';
 
 
 const initialColor = {
@@ -9,41 +9,34 @@ const initialColor = {
 };
 
 const ColorList = ({ colors, updateColors, setBool, bool }) => {
-  console.log(colors);
-  const {id} = useParams()
+  
+  let {history} = useHistory()
   const [editing, setEditing] = useState(false);
-  const [colorToEdit, setColorToEdit] = useState(initialColor);
-   
+  const [colorToEdit, setColorToEdit] = useState(initialColor);  
   
 
-  const editColor = color => { 
-    colors && colors.find(item=>`${item.id}`===id)   
+  const editColor = (color) => {   
     setEditing(true);
     setColorToEdit(color);
   };
-
-  // useEffect(()=>{   
-
-  //   const colorToUpdate = colors && colors.find(
-  //   item =>`${item.id}` === id)    
-  //   if(colorToUpdate){
-  //   setColorToEdit(colorToUpdate)
-  //   }
-    
-  //   },[colors, id])
-
-  const saveEdit = (color,e) => {
+   
+  const saveEdit = (e) => {
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    
     axiosWithAuth()    
-    .put(`/api/colors/${color.id}`, color)
-    .then(res=>{
-    // editColor()
-    console.log("I am the updated color", res)     
-    updateColors(res.data)
-    setBool(!bool) 
+    .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
+    .then(res=>{    
+    console.log("I am the updated color", res)
+    // editColor()    
+    //  history.push('/')
+
+    updateColors([])
+    
+    setBool(!bool)    
+ 
     })
     .catch(err=>console.log(err))
    
@@ -86,7 +79,7 @@ const ColorList = ({ colors, updateColors, setBool, bool }) => {
             color name:
             <input
               onChange={e =>
-                setColorToEdit({ ...colorToEdit, color: e.target.value })
+                setColorToEdit({...colorToEdit, color: e.target.value })
               }
               value={colorToEdit.color}
             />
@@ -97,7 +90,7 @@ const ColorList = ({ colors, updateColors, setBool, bool }) => {
               onChange={e =>
                 setColorToEdit({
                   ...colorToEdit,
-                  code: { hex: e.target.value }
+                  code: {hex: e.target.value }
                 })
               }
               value={colorToEdit.code.hex}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
+import {useHistory} from 'react-router-dom';
 
-const BubblePage = () => {
+const BubblePage = (props) => {
+  let history = useHistory()
   const [colorList, setColorList] = useState([]);
   const [bool, setBool] =useState(false)
   // fetch your colors data from the server when the component mounts
@@ -17,12 +19,20 @@ const BubblePage = () => {
     })
     .catch(err=>console.log(err))
   }, [bool])
+
+  const logout = (e)=>{
+    e.preventDefault()        
+    window.localStorage.removeItem('token'); 
+    props.history.push('/')    
+
+    }   
   
 
   return (
     <>
       <ColorList colors={colorList} updateColors={setColorList} setBool= {setBool} bool= {bool} />
       <Bubbles colors={colorList} />
+      <button type = "submit"onClick = {logout}>Log out</button>
     </>
   );
 };
